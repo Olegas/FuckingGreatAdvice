@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:padding="10dp"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <TextView
+        android:textColor="@android:color/black"
+        android:textSize="46dp"
+        android:textStyle="bold"
+        android:paddingRight="5dp"
+        android:paddingTop="30dp"
+        android:id="@+id/dash"
+        android:text="—"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+            />
+    <TextView
+        android:layout_toRightOf="@id/dash"
+        android:textColor="@android:color/black"
+        android:textSize="46dp"
+        android:textStyle="bold"
+        android:paddingTop="30dp"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/txtAdvice"
+        />
+    <Button
+        android:layout_alignParentBottom="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/newAdvice"
+        android:id="@+id/newAdvice" />
+</RelativeLayout>
+
