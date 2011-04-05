@@ -24,7 +24,8 @@ public class WidgetUpdater implements Runnable
     public void run()
     {
         // show loading message
-        appWidgetManager.updateAppWidget( widgetID, buildWidget( "Загружаю" ) );
+        appWidgetManager.updateAppWidget( widgetID, buildWidget( context
+                .getString( R.string.gettingAdvice ) ) );
 
         // fetch advice
         FuckinGreatAdvice advice = new FuckinGreatAdvice( context.getString( R.string.adviceUrl ),

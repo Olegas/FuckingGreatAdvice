@@ -5,5 +5,5 @@
  
 	<TextView android:id="@+id/widget_text" android:text="@string/gettingAdvice"
 		android:layout_height="fill_parent" android:layout_width="fill_parent"
-		android:gravity="center" /> 
+		android:gravity="center" android:textColor="#000" android:textSize="32dp"/> 
 </LinearLayout>
