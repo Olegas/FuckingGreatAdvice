@@ -12,6 +12,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 
 /**
+ * App Widget Provider. Calls Widget Updater
  * @author zoxa
  */
 public class FuckingWidget extends AppWidgetProvider

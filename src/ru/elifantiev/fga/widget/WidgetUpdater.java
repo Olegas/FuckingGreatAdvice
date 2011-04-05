@@ -1,3 +1,10 @@
+/**
+ * Widget Related packages:
+ * - AppWidgetProvider
+ * - WidgetUpdater
+ * - WidgetConfig
+ * - WidgetUpdateService
+ */
 package ru.elifantiev.fga.widget;
 
 import ru.elifantiev.fga.FuckinGreatAdvice;
@@ -6,6 +13,12 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.widget.RemoteViews;
 
+/**
+ * Widget Updater. Does call to Fucking Great Advice class and pulls current
+ * advice
+ * 
+ * @author zoxa
+ */
 public class WidgetUpdater implements Runnable
 {
     private final Context context;
