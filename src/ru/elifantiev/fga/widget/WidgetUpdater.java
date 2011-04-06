@@ -7,11 +7,11 @@
  */
 package ru.elifantiev.fga.widget;
 
-import ru.elifantiev.fga.FuckinGreatAdvice;
-import ru.elifantiev.fga.R;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.widget.RemoteViews;
+import ru.elifantiev.fga.FuckinGreatAdvice;
+import ru.elifantiev.fga.R;
 
 /**
  * Widget Updater. Does call to Fucking Great Advice class and pulls current
@@ -33,7 +33,6 @@ public class WidgetUpdater implements Runnable
         this.widgetID = id;
     }
 
-    @Override
     public void run()
     {
         // show loading message
