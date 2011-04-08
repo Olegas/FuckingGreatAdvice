@@ -33,6 +33,7 @@ public class WidgetUpdater implements Runnable
         this.widgetID = id;
     }
 
+    @Override
     public void run()
     {
         // show loading message
