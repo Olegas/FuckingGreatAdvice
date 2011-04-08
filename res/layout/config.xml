@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical" android:paddingLeft="10dp"
+	android:paddingTop="5dp" android:paddingRight="10dp">
+
+	<TextView android:layout_height="wrap_content" android:text="@string/config_type"
+		android:layout_width="fill_parent" />
+
+	<RadioGroup android:id="@+id/config_type"
+		android:layout_width="fill_parent" android:layout_height="wrap_content">
+		
+		<RadioButton android:id="@+id/config_type_main"
+			android:layout_height="wrap_content" android:checked="true"
+			android:text="@string/config_type_main" android:layout_width="fill_parent"
+			android:focusable="true"/>
+			
+		<RadioButton android:id="@+id/config_type_random"
+			android:text="@string/config_type_random" android:layout_width="fill_parent"
+			android:focusable="true" android:layout_height="wrap_content" />
+			
+	</RadioGroup>
+
+	<TextView android:layout_height="wrap_content" android:text="@string/config_refresh"
+		android:layout_width="fill_parent" />
+
+	<SeekBar android:id="@+id/config_refresh_rate"
+		android:layout_height="wrap_content" android:layout_width="fill_parent"
+		android:focusable="true" android:progress="4" android:max="24"
+		android:longClickable="true" />
+		
+	<TextView android:layout_height="wrap_content" android:text="@string/config_refresh_lbl"
+		android:layout_width="fill_parent" android:id="@+id/config_refresh_lbl"
+		android:gravity="right"/>
+		
+	<Button android:layout_gravity="center" android:text="@string/config_set"
+		android:layout_height="wrap_content" android:layout_width="wrap_content"
+		android:layout_marginTop="10dp" android:id="@+id/config_set"/>
+
+
+</LinearLayout>
