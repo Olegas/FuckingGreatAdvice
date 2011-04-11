@@ -66,5 +66,15 @@ public class FuckinGreatAdvice {
 
         return response.toString();
     }
+    
+    /**
+     * Function return URL of next advice
+     * 
+     * @return String url
+     */
+    public String getNextURL()
+    {
+        return this.url;
+    }
 
 }

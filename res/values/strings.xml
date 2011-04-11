@@ -5,6 +5,7 @@
     <string name="adviceUrl">http://fucking-great-advice.ru/advice/</string>
     <string name="adviceSelector">advice</string>
     <string name="gettingAdvice">Обождите...</string>
+    <string name="noWidgetData">:( Насальника, виджета нету!</string>
     <string name="error">А вот хуй!</string>
     <string name="config_type">тип виджета:</string>
     <string name="config_type_main">с главной</string>
