@@ -19,9 +19,18 @@
         
         <!-- Widget Receiver (Updater) -->
         <receiver android:label="@string/app_name" android:name=".widget.FuckingWidget" android:icon="@drawable/icon">
+        	
+        	<!-- General update request -->
 			<intent-filter android:icon="@drawable/icon" android:label="@string/app_name">
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
 			</intent-filter>
+			
+			<!-- AlarmManager update request -->
+			<intent-filter android:icon="@drawable/icon" android:label="@string/app_name">
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+				<data android:scheme="fga" />
+			</intent-filter>
+			
 			<meta-data android:name="android.appwidget.provider"
 				android:resource="@xml/wide_widget" />
 		</receiver>

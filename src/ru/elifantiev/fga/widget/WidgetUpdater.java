@@ -14,7 +14,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 /**
@@ -43,8 +42,6 @@ public class WidgetUpdater implements Runnable
     @Override
     public void run()
     {
-        Log.v( "FGA", "fetching data for appWidgetId " + widgetID );
-
         // show loading message
         appWidgetManager.updateAppWidget( widgetID, buildWidget( context
                 .getString( R.string.gettingAdvice ) ) );
@@ -52,10 +49,8 @@ public class WidgetUpdater implements Runnable
         // get URL and TYPE of the widget
         SQLiteDatabase db = new DBHelper( context ).getReadableDatabase();
         Cursor cur = db.query( DBHelper.WIDGET_TABLE, new String[] { DBHelper.WIDGET_TYPE,
-                DBHelper.WIDGET_REFRESH, DBHelper.WIDGET_URL }, DBHelper.WIDGET_ID + " = "
-                + widgetID, null, null, null, null );
-
-        Log.v( "FGA", "cursor count" + cur.getCount() );
+                DBHelper.WIDGET_URL }, DBHelper.WIDGET_ID + " = " + widgetID, null, null, null,
+                null );
 
         if ( cur.getCount() == 0 )
         {
@@ -69,15 +64,9 @@ public class WidgetUpdater implements Runnable
         else
         {
             cur.moveToFirst();
-            
+
             final String WIDGET_URL = cur.getString( cur.getColumnIndex( DBHelper.WIDGET_URL ) );
-            Log.v( "FGA", "Widget URL" + WIDGET_URL );
-
             final int WIDGET_TYPE = cur.getInt( cur.getColumnIndex( DBHelper.WIDGET_TYPE ) );
-            Log.v( "FGA", "Widget TYPE" + WIDGET_TYPE );
-
-            final int WIDGET_REFRESH = cur.getInt( cur.getColumnIndex( DBHelper.WIDGET_REFRESH ) );
-            Log.v( "FGA", "Widget REFRESH" + WIDGET_REFRESH );
 
             cur.close();
             db.close();
@@ -101,8 +90,6 @@ public class WidgetUpdater implements Runnable
                 values.clear();
                 dbW.close();
             }
-
-            // set Alarm
         }
     }
 

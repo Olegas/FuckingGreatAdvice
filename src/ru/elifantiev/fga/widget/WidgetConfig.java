@@ -2,13 +2,16 @@ package ru.elifantiev.fga.widget;
 
 import ru.elifantiev.fga.R;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -27,19 +30,27 @@ public class WidgetConfig extends Activity
     public void onCreate( Bundle savedInstanceState )
     {
         super.onCreate( savedInstanceState );
-        
+
         // Sent negative result in order to cancel widget placement
         setResult( RESULT_CANCELED );
-        
+
         setContentView( R.layout.config );
 
         /* find refresh Seek Bar & refresh LBL */
         refreshBar = (SeekBar) findViewById( R.id.config_refresh_rate );
         refreshLbl = (TextView) findViewById( R.id.config_refresh_lbl );
         refreshBar.setOnSeekBarChangeListener( new seekListener() );
-        
-        // TODO: update refreshLbl with current refreshBar progress 
-        
+
+        // update refreshLbl with current refreshBar progress
+        if ( refreshBar.getProgress() == 0 )
+        {
+            refreshLbl.setText( getString( R.string.config_refresh_none ) );
+        }
+        else
+        {
+            refreshLbl.setText( String.format( getString( R.string.config_refresh_lbl ), refreshBar
+                    .getProgress() ) );
+        }
 
         // set btnAction
         Button setBtn = (Button) findViewById( R.id.config_set );
@@ -54,8 +65,6 @@ public class WidgetConfig extends Activity
                     AppWidgetManager.INVALID_APPWIDGET_ID );
         }
 
-        Log.v( "FGA", "appWidgetId " + appWidgetId );
-
         // Check if Activity called for widget, else finish
         if ( appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID )
         {
@@ -69,7 +78,7 @@ public class WidgetConfig extends Activity
         public void onClick( View v )
         {
             final Context context = WidgetConfig.this;
-            
+
             // save config to db
             RadioButton rb1 = (RadioButton) findViewById( R.id.config_type_main );
 
@@ -82,29 +91,25 @@ public class WidgetConfig extends Activity
             values.put( DBHelper.WIDGET_REFRESH, refreshBar.getProgress() );
             values.put( DBHelper.WIDGET_URL, getString( R.string.adviceUrl ) );
 
-            Log.v( "FGA", "Values to save" + values.toString() );
-            
             SQLiteDatabase db = new DBHelper( context ).getWritableDatabase();
             db.insert( DBHelper.WIDGET_TABLE, null, values );
             db.close();
             values.clear();
-            
-            Log.v( "FGA", "get AppWidgetManager" );
-            // get AppWidgetManager
-            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance( WidgetConfig.this );
 
-            Log.v( "FGA", "call widget updater to update widget" );
-            // call widget updater to update widget
-            WidgetUpdater wUpdater = new WidgetUpdater( context, appWidgetManager,
-                    appWidgetId );
-            new Thread( wUpdater ).start();
+            PendingIntent pendingWidgetUpdate = WidgetConfig.getPendingItent( context, appWidgetId );
 
-            Log.v( "FGA", "Pass back original widgetId" );
+            // set Alarm Manager to call pending Intent
+            AlarmManager alarmManager = (AlarmManager) context
+                    .getSystemService( Context.ALARM_SERVICE );
+            alarmManager.setRepeating( AlarmManager.ELAPSED_REALTIME,
+                    SystemClock.elapsedRealtime(), AlarmManager.INTERVAL_HOUR
+                            * refreshBar.getProgress(), pendingWidgetUpdate );
+
             // Pass back original widgetId
             Intent resultValue = new Intent();
             resultValue.putExtra( AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId );
             setResult( RESULT_OK, resultValue );
-            
+
             finish();
         }
     }
@@ -132,5 +137,20 @@ public class WidgetConfig extends Activity
         @Override
         public void onStopTrackingTouch( SeekBar seekBar )
         {}
+    }
+
+    public static PendingIntent getPendingItent( final Context context, final int widgetId )
+    {
+        Intent updaterIntent = new Intent();
+        updaterIntent.setAction( AppWidgetManager.ACTION_APPWIDGET_UPDATE );
+        updaterIntent.putExtra( AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[] { widgetId } );
+        updaterIntent.setData( Uri.withAppendedPath( Uri.parse( "fga://widget/id/" ), String
+                .valueOf( widgetId ) ) );
+
+        // create PendingIntent that will broadcast widget update
+        PendingIntent pendingWidgetUpdate = PendingIntent.getBroadcast( context, 0, updaterIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT );
+
+        return pendingWidgetUpdate;
     }
 }
