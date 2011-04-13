@@ -4,6 +4,5 @@
 
 	<TextView android:id="@+id/widget_text" android:text="@string/gettingAdvice"
 		android:layout_height="fill_parent" android:layout_width="fill_parent"
-		android:gravity="center" android:textSize="20dp" android:textColor="#CCC"
-		android:background="@drawable/appwidget_black" />
+		android:gravity="center" android:textSize="20dp" android:background="@drawable/appwidget_black" android:textColor="#EEE"/>
 </LinearLayout>

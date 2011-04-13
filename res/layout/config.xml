@@ -25,6 +25,6 @@
 	<Button android:layout_gravity="center" android:text="@string/config_set"
 		android:layout_height="wrap_content" android:layout_width="fill_parent"
 		android:layout_marginTop="10dp" android:id="@+id/config_set"
-		android:background="@drawable/appwidget_black" android:textColor="#CCC" />
+		android:background="@drawable/appwidget_black" android:textColor="#EEE"/>
 
 </LinearLayout>
