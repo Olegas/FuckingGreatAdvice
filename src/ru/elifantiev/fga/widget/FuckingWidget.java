@@ -108,6 +108,7 @@ public class FuckingWidget extends AppWidgetProvider
     /**
      * Add onReceive method to call onDelete method. This fixes bug in Android 1.5
      */
+    @Override
     public void onReceive( Context context, Intent intent )
     {
         final String action = intent.getAction();
