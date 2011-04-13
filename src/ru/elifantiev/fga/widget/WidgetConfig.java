@@ -15,7 +15,7 @@ import android.os.SystemClock;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.RadioButton;
+import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -37,7 +37,7 @@ public class WidgetConfig extends Activity
         setContentView( R.layout.config );
 
         /* find refresh Seek Bar & refresh LBL */
-        refreshBar = (SeekBar) findViewById( R.id.config_refresh_rate );
+        refreshBar = (SeekBar) findViewById( R.id.config_refresh );
         refreshLbl = (TextView) findViewById( R.id.config_refresh_lbl );
         refreshBar.setOnSeekBarChangeListener( new seekListener() );
 
@@ -55,6 +55,9 @@ public class WidgetConfig extends Activity
         // set btnAction
         Button setBtn = (Button) findViewById( R.id.config_set );
         setBtn.setOnClickListener( new btnClickListener() );
+
+        Button setBtnW = (Button) findViewById( R.id.config_set_white );
+        setBtnW.setOnClickListener( new btnClickListener() );
 
         // Find the widget id from intent
         Intent intent = getIntent();
@@ -74,21 +77,26 @@ public class WidgetConfig extends Activity
 
     private class btnClickListener implements OnClickListener
     {
+
         @Override
         public void onClick( View v )
         {
             final Context context = WidgetConfig.this;
 
             // save config to db
-            RadioButton rb1 = (RadioButton) findViewById( R.id.config_type_main );
+            CheckBox widgetType = (CheckBox) findViewById( R.id.config_type );
 
-            int widgetUpdateType = rb1.isChecked() ? WidgetUpdater.WIDGET_UPDATE_MAIN
+            int widgetUpdateType = widgetType.isChecked() ? WidgetUpdater.WIDGET_UPDATE_MAIN
                     : WidgetUpdater.WIDGET_UPDATE_RND;
+
+            int widgetStyle = (v.getId() == R.id.config_set_white) ? WidgetUpdater.WIDGET_STYLE_WHITE
+                    : WidgetUpdater.WIDGET_STYLE_BLACK;
 
             ContentValues values = new ContentValues();
             values.put( DBHelper.WIDGET_ID, appWidgetId );
             values.put( DBHelper.WIDGET_TYPE, widgetUpdateType );
             values.put( DBHelper.WIDGET_REFRESH, refreshBar.getProgress() );
+            values.put( DBHelper.WIDGET_STYLE, widgetStyle );
             values.put( DBHelper.WIDGET_URL, getString( R.string.adviceUrl ) );
 
             SQLiteDatabase db = new DBHelper( context ).getWritableDatabase();

@@ -31,6 +31,9 @@ public class WidgetUpdater implements Runnable
     public final static int WIDGET_UPDATE_MAIN = 0;
     public final static int WIDGET_UPDATE_RND = WIDGET_UPDATE_MAIN + 1;
 
+    public final static int WIDGET_STYLE_WHITE = 0;
+    public final static int WIDGET_STYLE_BLACK = WIDGET_STYLE_WHITE + 1;
+
     public WidgetUpdater( final Context context, final AppWidgetManager appWidgetManager,
             final int id )
     {
@@ -42,15 +45,11 @@ public class WidgetUpdater implements Runnable
     @Override
     public void run()
     {
-        // show loading message
-        appWidgetManager.updateAppWidget( widgetID, buildWidget( context
-                .getString( R.string.gettingAdvice ) ) );
-
-        // get URL and TYPE of the widget
+        // get URL, TYPE, and STYLE of the widget
         SQLiteDatabase db = new DBHelper( context ).getReadableDatabase();
         Cursor cur = db.query( DBHelper.WIDGET_TABLE, new String[] { DBHelper.WIDGET_TYPE,
-                DBHelper.WIDGET_URL }, DBHelper.WIDGET_ID + " = " + widgetID, null, null, null,
-                null );
+                DBHelper.WIDGET_URL, DBHelper.WIDGET_STYLE },
+                DBHelper.WIDGET_ID + " = " + widgetID, null, null, null, null );
 
         if ( cur.getCount() == 0 )
         {
@@ -59,7 +58,7 @@ public class WidgetUpdater implements Runnable
 
             // widget data not found
             appWidgetManager.updateAppWidget( widgetID, buildWidget( context
-                    .getString( R.string.noWidgetData ) ) );
+                    .getString( R.string.noWidgetData ), WIDGET_STYLE_WHITE ) );
         }
         else
         {
@@ -67,6 +66,11 @@ public class WidgetUpdater implements Runnable
 
             final String WIDGET_URL = cur.getString( cur.getColumnIndex( DBHelper.WIDGET_URL ) );
             final int WIDGET_TYPE = cur.getInt( cur.getColumnIndex( DBHelper.WIDGET_TYPE ) );
+            final int WIDGET_STYLE = cur.getInt( cur.getColumnIndex( DBHelper.WIDGET_STYLE ) );
+
+            // show loading message
+            appWidgetManager.updateAppWidget( widgetID, buildWidget( context
+                    .getString( R.string.gettingAdvice ), WIDGET_STYLE ) );
 
             cur.close();
             db.close();
@@ -76,7 +80,8 @@ public class WidgetUpdater implements Runnable
                     .getString( R.string.error ) );
 
             // update widget with advice
-            appWidgetManager.updateAppWidget( widgetID, buildWidget( advice.getAdvice() ) );
+            appWidgetManager.updateAppWidget( widgetID, buildWidget( advice.getAdvice(),
+                    WIDGET_STYLE ) );
 
             // TYPE is random save next url
             if ( WIDGET_TYPE == WIDGET_UPDATE_RND )
@@ -93,10 +98,11 @@ public class WidgetUpdater implements Runnable
         }
     }
 
-    private RemoteViews buildWidget( final String advice )
+    private RemoteViews buildWidget( final String advice, final int style )
     {
-        // get widget layout
-        RemoteViews views = new RemoteViews( context.getPackageName(), R.layout.widget_white );
+        // get widget layout based by style
+        int layout = (style == WIDGET_STYLE_WHITE) ? R.layout.widget_white : R.layout.widget_black;
+        RemoteViews views = new RemoteViews( context.getPackageName(), layout );
 
         // set text
         views.setTextViewText( R.id.widget_text, advice );

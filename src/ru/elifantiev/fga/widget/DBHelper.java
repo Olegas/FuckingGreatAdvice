@@ -15,12 +15,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHelper extends SQLiteOpenHelper
 {
     public static String DATABASE_NAME = "fuckinggreateadvice.db";
-    private static int DATABASE_VERSION = 1;
+    private static int DATABASE_VERSION = 2;
     public static String WIDGET_TABLE = "widget";
 
     public static String WIDGET_ID = "_id";
     public static String WIDGET_TYPE = "type";
     public static String WIDGET_REFRESH = "rate";
+    public static String WIDGET_STYLE = "style";
     public static String WIDGET_URL = "url";
 
     /**
@@ -55,8 +56,16 @@ public class DBHelper extends SQLiteOpenHelper
     @Override
     public void onUpgrade( SQLiteDatabase db, int arg1, int arg2 )
     {
-        db.execSQL( "DROP TABLE IF EXISTS " + WIDGET_TABLE );
-        onCreate( db );
+        try
+        {
+            db.execSQL( "ALTER TABLE " + WIDGET_TABLE + " ADD COLUMN " + WIDGET_STYLE
+                    + " INTEGER DEFAULT 0;" );
+        }
+        catch ( Exception e )
+        {
+            db.execSQL( "DROP TABLE IF EXISTS " + WIDGET_TABLE );
+            onCreate( db );
+        }
     }
 
     /**
@@ -71,6 +80,7 @@ public class DBHelper extends SQLiteOpenHelper
         sql.append( WIDGET_ID ).append( " INTEGER PRIMARY KEY, " );
         sql.append( WIDGET_TYPE ).append( " INTEGER DEFAULT 0, " );
         sql.append( WIDGET_REFRESH ).append( " INTEGER DEFAULT 0, " );
+        sql.append( WIDGET_STYLE ).append( " INTEGER DEFAULT 0, " );
         sql.append( WIDGET_URL ).append( " TEXT " );
         sql.append( " );" );
         return sql.toString();
