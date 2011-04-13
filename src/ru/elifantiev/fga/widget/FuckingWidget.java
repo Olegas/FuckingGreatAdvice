@@ -12,6 +12,7 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -88,7 +89,7 @@ public class FuckingWidget extends AppWidgetProvider
                 PendingIntent pendingWidgetUpdate = WidgetConfig
                         .getPendingItent( context, widgetId );
 
-                // stoping AlarmManager
+                // stopping AlarmManager
                 AlarmManager alarmManager = (AlarmManager) context
                         .getSystemService( Context.ALARM_SERVICE );
                 alarmManager.cancel( pendingWidgetUpdate );
@@ -103,4 +104,26 @@ public class FuckingWidget extends AppWidgetProvider
 
         super.onDisabled( context );
     }
+
+    /**
+     * Add onReceive method to call onDelete method. This fixes bug in Android 1.5
+     */
+    public void onReceive( Context context, Intent intent )
+    {
+        final String action = intent.getAction();
+        if ( AppWidgetManager.ACTION_APPWIDGET_DELETED.equals( action ) )
+        {
+            final int appWidgetId = intent.getExtras().getInt( AppWidgetManager.EXTRA_APPWIDGET_ID,
+                    AppWidgetManager.INVALID_APPWIDGET_ID );
+            if ( appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID )
+            {
+                this.onDeleted( context, new int[] { appWidgetId } );
+            }
+        }
+        else
+        {
+            super.onReceive( context, intent );
+        }
+    }
+
 }
