@@ -1,25 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Охуенный Блять Совет</string>
-    <string name="newAdvice">Ещё совет</string>
-    <string name="adviceUrl">http://fucking-great-advice.ru/advice/</string>
-    <string name="adviceSelector">advice</string>
-    <string name="gettingAdvice">Обождите...</string>
-    <string name="noWidgetData">:( Насальника, виджета нету!</string>
-    <string name="error">А вот хуй!</string>
-    <string name="config_type">тип виджета:</string>
-    <string name="config_type_main">с главной</string>
-    <string name="config_type_random">случайный</string>
-    <string name="config_refresh">обновлять:</string>
-    <string name="config_refresh_lbl">каждые %s часа(ов)</string>
-    <string name="config_set">установить</string>
-    <string name="config_refresh_none">не обновлять</string>
-    <style name="widget_white">
-        <item name="android:background">@drawable/widget</item>
-        <item name="android:textColor">#000</item>
-    </style>
-    <style name="widget_black">
-        <item name="android:background">@drawable/fga_black_portrait</item>
-        <item name="android:textColor">#CCC</item>
-    </style>
+	<string name="app_name">Охуенный Блять Совет</string>
+	<string name="newAdvice">Ещё совет</string>
+	<string name="adviceUrl">http://fucking-great-advice.ru/advice/</string>
+	<string name="adviceSelector">advice</string>
+	<string name="gettingAdvice">Обождите...</string>
+	<string name="noWidgetData">:( Насальника, виджета нету!</string>
+	<string name="error">А вот хуй!</string>
+	<string name="config_type">тип виджета:</string>
+	<string name="config_type_main">с главной</string>
+	<string name="config_type_random">случайный</string>
+	<string name="config_refresh">обновлять:</string>
+	<string name="config_refresh_lbl">каждые %s часа(ов)</string>
+	<string name="config_set">установить</string>
+	<string name="config_refresh_none">не обновлять</string>
 </resources>

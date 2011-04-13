@@ -96,7 +96,7 @@ public class WidgetUpdater implements Runnable
     private RemoteViews buildWidget( final String advice )
     {
         // get widget layout
-        RemoteViews views = new RemoteViews( context.getPackageName(), R.layout.widget );
+        RemoteViews views = new RemoteViews( context.getPackageName(), R.layout.widget_white );
 
         // set text
         views.setTextViewText( R.id.widget_text, advice );
