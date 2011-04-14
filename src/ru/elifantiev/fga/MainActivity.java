@@ -49,12 +49,11 @@ public class MainActivity extends Activity
         protected void onPreExecute() {
             progress = ProgressDialog.show(MainActivity.this, "",
                     getString(R.string.gettingAdvice), true, false);
-            progress.show();
         }
 
         @Override
         protected void onPostExecute(String advice) {
-            progress.hide();
+            progress.dismiss();
             adviceText.setText(advice);
         }
     }
