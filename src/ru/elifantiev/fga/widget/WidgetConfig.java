@@ -86,8 +86,8 @@ public class WidgetConfig extends Activity
             // save config to db
             CheckBox widgetType = (CheckBox) findViewById( R.id.config_type );
 
-            int widgetUpdateType = widgetType.isChecked() ? WidgetUpdater.WIDGET_UPDATE_MAIN
-                    : WidgetUpdater.WIDGET_UPDATE_RND;
+            int widgetUpdateType = widgetType.isChecked() ? WidgetUpdater.WIDGET_UPDATE_RND
+                    : WidgetUpdater.WIDGET_UPDATE_MAIN;
 
             int widgetStyle = (v.getId() == R.id.config_set_white) ? WidgetUpdater.WIDGET_STYLE_WHITE
                     : WidgetUpdater.WIDGET_STYLE_BLACK;
