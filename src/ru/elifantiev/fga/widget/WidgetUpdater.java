@@ -14,7 +14,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.Html;
 import android.widget.RemoteViews;
 import ru.elifantiev.fga.FuckinGreatAdvice;
 import ru.elifantiev.fga.MainActivity;
@@ -95,7 +94,7 @@ public class WidgetUpdater implements Runnable
             appWidgetManager.updateAppWidget(
                     widgetID,
                     buildWidget(
-                        Html.fromHtml("&mdash;").toString() + " " + advice.getAdvice(),
+                        context.getString(R.string.widget_format, advice.getAdvice()),
                         WIDGET_STYLE,
                         WIDGET_TYPE));
 
