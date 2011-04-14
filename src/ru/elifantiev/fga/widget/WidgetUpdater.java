@@ -7,9 +7,6 @@
  */
 package ru.elifantiev.fga.widget;
 
-import ru.elifantiev.fga.FuckinGreatAdvice;
-import ru.elifantiev.fga.MainActivity;
-import ru.elifantiev.fga.R;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ContentValues;
@@ -17,7 +14,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.Html;
 import android.widget.RemoteViews;
+import ru.elifantiev.fga.FuckinGreatAdvice;
+import ru.elifantiev.fga.MainActivity;
+import ru.elifantiev.fga.R;
 
 /**
  * Widget Updater. Does call to Fucking Great Advice class and pulls current
@@ -94,7 +95,7 @@ public class WidgetUpdater implements Runnable
             appWidgetManager.updateAppWidget(
                     widgetID,
                     buildWidget(
-                        "- " + advice.getAdvice(),
+                        Html.fromHtml("&mdash;").toString() + " " + advice.getAdvice(),
                         WIDGET_STYLE,
                         WIDGET_TYPE));
 
