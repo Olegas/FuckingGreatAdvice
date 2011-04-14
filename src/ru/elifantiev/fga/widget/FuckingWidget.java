@@ -23,10 +23,6 @@ import android.database.sqlite.SQLiteDatabase;
  */
 public class FuckingWidget extends AppWidgetProvider
 {
-    public static final String UPDATE_WIDGET_ACTION = "ru.elifantiev.fga.widget.REFRESH_REQUEST";
-
-    // onEnable have no idea what to do
-
     // Update current widget using db data
     @Override
     public void onUpdate( final Context context, final AppWidgetManager appWidgetManager,
@@ -122,20 +118,6 @@ public class FuckingWidget extends AppWidgetProvider
             {
                 this.onDeleted( context, new int[] { appWidgetId } );
             }
-        }
-        else if(UPDATE_WIDGET_ACTION.equals(intent.getAction())) {
-
-            int appWidgetId;
-            try {
-                appWidgetId = Integer.parseInt(intent.getData().getHost(), 10);
-            } catch (NumberFormatException e) {
-                appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-            }
-            if ( appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID )
-                this.onUpdate(
-                        context,
-                        AppWidgetManager.getInstance(context),
-                        new int[]{appWidgetId});
         }
         else
         {

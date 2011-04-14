@@ -33,11 +33,6 @@
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
 				<data android:scheme="fga" />
 			</intent-filter>
-
-            <intent-filter>
-                <action android:name="ru.elifantiev.fga.widget.REFRESH_REQUEST" />
-                <data android:scheme="fga" />
-            </intent-filter>
 			
 			<meta-data android:name="android.appwidget.provider"
 				android:resource="@xml/wide_widget" />

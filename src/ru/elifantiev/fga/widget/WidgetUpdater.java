@@ -7,6 +7,9 @@
  */
 package ru.elifantiev.fga.widget;
 
+import ru.elifantiev.fga.FuckinGreatAdvice;
+import ru.elifantiev.fga.MainActivity;
+import ru.elifantiev.fga.R;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ContentValues;
@@ -14,11 +17,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.widget.RemoteViews;
-import ru.elifantiev.fga.FuckinGreatAdvice;
-import ru.elifantiev.fga.MainActivity;
-import ru.elifantiev.fga.R;
 
 /**
  * Widget Updater. Does call to Fucking Great Advice class and pulls current
@@ -95,7 +94,7 @@ public class WidgetUpdater implements Runnable
             appWidgetManager.updateAppWidget(
                     widgetID,
                     buildWidget(
-                        "— " + advice.getAdvice(),
+                        "- " + advice.getAdvice(),
                         WIDGET_STYLE,
                         WIDGET_TYPE));
 
@@ -122,19 +121,17 @@ public class WidgetUpdater implements Runnable
 
         PendingIntent clickRequest;
 
-        if(type == WIDGET_UPDATE_MAIN) {
+        if(type == WIDGET_UPDATE_MAIN) 
+        {
             clickRequest = PendingIntent.getActivity(
                     context,
                     0,
                     new Intent(context, MainActivity.class),
                     0);
-        } else {
-            clickRequest = PendingIntent.getBroadcast(
-                        context,
-                        0,
-                        new Intent(FuckingWidget.UPDATE_WIDGET_ACTION).setData(
-                                Uri.parse("fga://" + String.valueOf(widgetID))),
-                        0);
+        } 
+        else 
+        {
+            clickRequest =  WidgetConfig.getPendingItent( context, widgetID );
         }
 
         // set text
