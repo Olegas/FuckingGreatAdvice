@@ -7,13 +7,17 @@
  */
 package ru.elifantiev.fga.widget;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.widget.RemoteViews;
 import ru.elifantiev.fga.FuckinGreatAdvice;
+import ru.elifantiev.fga.MainActivity;
 import ru.elifantiev.fga.R;
 
 /**
@@ -57,8 +61,12 @@ public class WidgetUpdater implements Runnable
             db.close();
 
             // widget data not found
-            appWidgetManager.updateAppWidget( widgetID, buildWidget( context
-                    .getString( R.string.noWidgetData ), WIDGET_STYLE_WHITE ) );
+            appWidgetManager.updateAppWidget(
+                    widgetID,
+                    buildWidget(
+                            context.getString(R.string.noWidgetData),
+                            WIDGET_STYLE_WHITE,
+                            WidgetUpdater.WIDGET_UPDATE_MAIN));
         }
         else
         {
@@ -69,8 +77,12 @@ public class WidgetUpdater implements Runnable
             final int WIDGET_STYLE = cur.getInt( cur.getColumnIndex( DBHelper.WIDGET_STYLE ) );
 
             // show loading message
-            appWidgetManager.updateAppWidget( widgetID, buildWidget( context
-                    .getString( R.string.gettingAdvice ), WIDGET_STYLE ) );
+            appWidgetManager.updateAppWidget(
+                    widgetID,
+                    buildWidget(
+                        context.getString(R.string.gettingAdvice),
+                        WIDGET_STYLE,
+                        WIDGET_TYPE));
 
             cur.close();
             db.close();
@@ -80,8 +92,12 @@ public class WidgetUpdater implements Runnable
                     .getString( R.string.error ) );
 
             // update widget with advice
-            appWidgetManager.updateAppWidget( widgetID, buildWidget( advice.getAdvice(),
-                    WIDGET_STYLE ) );
+            appWidgetManager.updateAppWidget(
+                    widgetID,
+                    buildWidget(
+                        "— " + advice.getAdvice(),
+                        WIDGET_STYLE,
+                        WIDGET_TYPE));
 
             // TYPE is random save next url
             if ( WIDGET_TYPE == WIDGET_UPDATE_RND )
@@ -98,14 +114,32 @@ public class WidgetUpdater implements Runnable
         }
     }
 
-    private RemoteViews buildWidget( final String advice, final int style )
+    private RemoteViews buildWidget( final String advice, final int style, final int type )
     {
         // get widget layout based by style
         int layout = (style == WIDGET_STYLE_WHITE) ? R.layout.widget_white : R.layout.widget_black;
         RemoteViews views = new RemoteViews( context.getPackageName(), layout );
 
+        PendingIntent clickRequest;
+
+        if(type == WIDGET_UPDATE_MAIN) {
+            clickRequest = PendingIntent.getActivity(
+                    context,
+                    0,
+                    new Intent(context, MainActivity.class),
+                    0);
+        } else {
+            clickRequest = PendingIntent.getBroadcast(
+                        context,
+                        0,
+                        new Intent(FuckingWidget.UPDATE_WIDGET_ACTION).setData(
+                                Uri.parse("fga://" + String.valueOf(widgetID))),
+                        0);
+        }
+
         // set text
-        views.setTextViewText( R.id.widget_text, "— " + advice );
+        views.setTextViewText( R.id.widget_text, advice );
+        views.setOnClickPendingIntent(R.id.widget_text, clickRequest);
         return views;
     }
 
