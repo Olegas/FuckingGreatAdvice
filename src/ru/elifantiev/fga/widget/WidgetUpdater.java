@@ -105,7 +105,7 @@ public class WidgetUpdater implements Runnable
         RemoteViews views = new RemoteViews( context.getPackageName(), layout );
 
         // set text
-        views.setTextViewText( R.id.widget_text, advice );
+        views.setTextViewText( R.id.widget_text, "— " + advice );
         return views;
     }
 
