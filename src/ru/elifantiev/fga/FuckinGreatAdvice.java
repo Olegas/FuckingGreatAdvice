@@ -21,12 +21,12 @@ public class FuckinGreatAdvice {
         this.errorText = errorText;
     }
 
-    public String getAdvice() {
-        String page = null, retval = errorText;
+    public String getAdviceOrThrow() throws Exception {
+        String page = null, retval = null;
         try {
             page = loadPage();
         } catch (IOException e) {
-            // ignore
+            throw new Exception("No new data");
         }
 
         if (page != null) {
@@ -34,20 +34,33 @@ public class FuckinGreatAdvice {
             Matcher m = p.matcher(page);
             while (m.find()) { // Find each match in turn; String can't do this.
                 // current advice
-            	retval =  m.group(1).replace("&nbsp;", " ");
-                
+                retval = m.group(1).replace("&nbsp;", " ");
             }
 
             p = Pattern.compile("\"another\"><a href=\"([^\"]+)\"");
             m = p.matcher(page);
             while (m.find()) { // Find each match in turn; String can't do this.
                 // next advice
-            	url =  m.group(1);
+                url = m.group(1);
             }
         }
+
+        if(retval == null)
+            throw new Exception("Page parsing error");
+
         return Html.fromHtml(retval).toString();
     }
-  
+
+    public String getAdvice() {
+        String retval;
+        try {
+            retval = getAdviceOrThrow();
+        } catch(Exception e) {
+            retval = errorText;
+        }
+        return retval;
+    }
+
     private String loadPage() throws IOException {
         StringBuilder response = new StringBuilder();
         String line;
@@ -65,14 +78,13 @@ public class FuckinGreatAdvice {
 
         return response.toString();
     }
-    
+
     /**
      * Function return URL of next advice
-     * 
+     *
      * @return String url
      */
-    public String getNextURL()
-    {
+    public String getNextURL() {
         return this.url;
     }
 
