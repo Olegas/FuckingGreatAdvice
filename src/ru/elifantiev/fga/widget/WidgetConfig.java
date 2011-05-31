@@ -97,7 +97,6 @@ public class WidgetConfig extends Activity
             values.put( DBHelper.WIDGET_TYPE, widgetUpdateType );
             values.put( DBHelper.WIDGET_REFRESH, refreshBar.getProgress() );
             values.put( DBHelper.WIDGET_STYLE, widgetStyle );
-            values.put( DBHelper.WIDGET_URL, getString( R.string.adviceUrl ) );
 
             SQLiteDatabase db = new DBHelper( context ).getWritableDatabase();
             db.insert( DBHelper.WIDGET_TABLE, null, values );
@@ -156,9 +155,8 @@ public class WidgetConfig extends Activity
                 .valueOf( widgetId ) ) );
 
         // create PendingIntent that will broadcast widget update
-        PendingIntent pendingWidgetUpdate = PendingIntent.getBroadcast( context, 0, updaterIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT );
 
-        return pendingWidgetUpdate;
+        return PendingIntent.getBroadcast( context, 0, updaterIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT );
     }
 }

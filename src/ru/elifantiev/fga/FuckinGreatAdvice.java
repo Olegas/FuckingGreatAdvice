@@ -2,8 +2,15 @@ package ru.elifantiev.fga;
 
 
 import android.text.Html;
+import android.util.Log;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,78 +21,53 @@ import java.util.regex.Pattern;
 
 public class FuckinGreatAdvice {
 
-    private String url, errorText;
-
-    public FuckinGreatAdvice(String adviceUrl, String errorText) {
-        this.url = adviceUrl;
-        this.errorText = errorText;
+    public FuckinGreatAdvice() {
     }
 
-    public String getAdviceOrThrow() throws Exception {
-        String page = null, retval = null;
+    public String getRandomAdvice() {
+        return getAdviceUrl("http://fucking-great-advice.ru/api/random");
+    }
+
+    public String getLastAdvice() {
+        return getAdviceUrl("http://fucking-great-advice.ru/api/latest");
+    }
+
+    private String getAdviceUrl(String url) {
+        String result = null;
+        HttpClient client = new DefaultHttpClient();
+        HttpGet get = new HttpGet(url);
+        StringBuilder responseBuilder = new StringBuilder();
         try {
-            page = loadPage();
+            client.execute(get).getEntity().getContent();
+            String line;
+            HttpResponse httpResponse = client.execute(get);
+            int statusCode = httpResponse.getStatusLine().getStatusCode();
+            if (statusCode == 200) {
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(httpResponse.getEntity().getContent()), 8192);
+                while ((line = reader.readLine()) != null)
+                    responseBuilder.append(line);
+                reader.close();
+
+                Object response = new JSONTokener(responseBuilder.toString()).nextValue();
+                JSONObject advice;
+                if(response instanceof JSONArray) {
+                    if(((JSONArray) response).length() > 0) {
+                        advice = ((JSONArray)response).getJSONObject(0);
+                    } else
+                        return null;
+                } else if(response instanceof JSONObject) {
+                    advice = (JSONObject) response;
+                } else
+                    return null;
+
+                result = Html.fromHtml(advice.getString("text")).toString();
+            }
         } catch (IOException e) {
-            throw new Exception("No new data");
+            // ignore
+        } catch (JSONException e) {
+            // ignore
         }
-
-        if (page != null) {
-            Pattern p = Pattern.compile("id=\"advice\">([^<]+)</");
-            Matcher m = p.matcher(page);
-            while (m.find()) { // Find each match in turn; String can't do this.
-                // current advice
-                retval = m.group(1).replace("&nbsp;", " ");
-            }
-
-            p = Pattern.compile("\"another\"><a href=\"([^\"]+)\"");
-            m = p.matcher(page);
-            while (m.find()) { // Find each match in turn; String can't do this.
-                // next advice
-                url = m.group(1);
-            }
-        }
-
-        if(retval == null)
-            throw new Exception("Page parsing error");
-
-        return Html.fromHtml(retval).toString();
+        return result;
     }
-
-    public String getAdvice() {
-        String retval;
-        try {
-            retval = getAdviceOrThrow();
-        } catch(Exception e) {
-            retval = errorText;
-        }
-        return retval;
-    }
-
-    private String loadPage() throws IOException {
-        StringBuilder response = new StringBuilder();
-        String line;
-
-        DefaultHttpClient httpclient = new DefaultHttpClient();
-
-
-        InputStream is = httpclient.execute(new HttpGet(url)).getEntity().getContent();
-        BufferedReader rdr = new BufferedReader(new InputStreamReader(is, "windows-1251"));
-
-        while ((line = rdr.readLine()) != null)
-            response.append(line);
-
-        rdr.close();
-
-        return response.toString();
-    }
-
-    /**
-     * Function return URL of next advice
-     *
-     * @return String url
-     */
-    public String getNextURL() {
-        return this.url;
-    }
-
 }

@@ -28,19 +28,21 @@ import ru.elifantiev.fga.R;
 public class WidgetUpdater implements Runnable
 {
     private final Context context;
+    private final FuckinGreatAdvice advice;
     private final AppWidgetManager appWidgetManager;
     private final int widgetID;
 
     public final static int WIDGET_UPDATE_MAIN = 0;
-    public final static int WIDGET_UPDATE_RND = WIDGET_UPDATE_MAIN + 1;
+    public final static int WIDGET_UPDATE_RND = 1;
 
     public final static int WIDGET_STYLE_WHITE = 0;
-    public final static int WIDGET_STYLE_BLACK = WIDGET_STYLE_WHITE + 1;
+    public final static int WIDGET_STYLE_BLACK = 1;
 
     public WidgetUpdater( final Context context, final AppWidgetManager appWidgetManager,
             final int id )
     {
         this.context = context;
+        this.advice = new FuckinGreatAdvice();
         this.appWidgetManager = appWidgetManager;
         this.widgetID = id;
     }
@@ -71,44 +73,25 @@ public class WidgetUpdater implements Runnable
         {
             cur.moveToFirst();
 
-            final String WIDGET_URL = cur.getString( cur.getColumnIndex( DBHelper.WIDGET_URL ) );
             final int WIDGET_TYPE = cur.getInt( cur.getColumnIndex( DBHelper.WIDGET_TYPE ) );
             final int WIDGET_STYLE = cur.getInt( cur.getColumnIndex( DBHelper.WIDGET_STYLE ) );
 
-            // show loading message
-            appWidgetManager.updateAppWidget(
-                    widgetID,
-                    buildWidget(
-                        context.getString(R.string.gettingAdvice),
-                        WIDGET_STYLE,
-                        WIDGET_TYPE));
+            String widgetContent =
+                    (WIDGET_TYPE == WIDGET_UPDATE_RND) ? advice.getRandomAdvice() : advice.getLastAdvice();
 
             cur.close();
             db.close();
 
-            // fetch advice
-            FuckinGreatAdvice advice = new FuckinGreatAdvice( WIDGET_URL, context
-                    .getString( R.string.error ) );
-
-            // update widget with advice
-            appWidgetManager.updateAppWidget(
-                    widgetID,
-                    buildWidget(
-                        context.getString(R.string.widget_format, advice.getAdvice()),
-                        WIDGET_STYLE,
-                        WIDGET_TYPE));
-
-            // TYPE is random save next url
-            if ( WIDGET_TYPE == WIDGET_UPDATE_RND )
-            {
-                ContentValues values = new ContentValues();
-                values.put( DBHelper.WIDGET_URL, advice.getNextURL() );
-
-                SQLiteDatabase dbW = new DBHelper( context ).getWritableDatabase();
-                dbW.update( DBHelper.WIDGET_TABLE, values, DBHelper.WIDGET_ID + " = " + widgetID,
-                        null );
-                values.clear();
-                dbW.close();
+            if(widgetContent != null) {
+                // update widget with advice
+                appWidgetManager.updateAppWidget(
+                        widgetID,
+                        buildWidget(
+                            context.getString(
+                                    R.string.widget_format,
+                                    widgetContent),
+                            WIDGET_STYLE,
+                            WIDGET_TYPE));
             }
         }
     }

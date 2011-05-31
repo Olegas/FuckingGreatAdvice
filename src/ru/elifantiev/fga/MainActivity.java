@@ -10,6 +10,7 @@ import android.widget.TextView;
 public class MainActivity extends Activity
 {
     private FuckinGreatAdvice advice;
+    private String error;
     private TextView adviceText;
     private ProgressDialog progress;
 
@@ -20,10 +21,9 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        error = getString(R.string.error);
         adviceText = (TextView)findViewById(R.id.txtAdvice);
-        advice = new FuckinGreatAdvice(
-                getString(R.string.adviceUrl),
-                getString(R.string.error));
+        advice = new FuckinGreatAdvice();
 
         findViewById(R.id.newAdvice).setOnClickListener(new View.OnClickListener(){
             public void onClick(View view) {
@@ -42,7 +42,8 @@ public class MainActivity extends Activity
 
         @Override
         protected String doInBackground(Void... voids) {
-            return advice.getAdvice();
+            String adviceText = advice.getRandomAdvice();
+            return adviceText != null ? adviceText : error;
         }
 
         @Override
@@ -54,7 +55,7 @@ public class MainActivity extends Activity
         @Override
         protected void onPostExecute(String advice) {
             progress.dismiss();
-            adviceText.setText(advice);
+            adviceText.setText(advice != null ? advice : error);
         }
     }
 

@@ -2,8 +2,6 @@
 <resources>
 	<string name="app_name">Fucking Great Advice</string>
 	<string name="newAdvice">Ещё совет</string>
-	<string name="adviceUrl">http://fucking-great-advice.ru/advice/</string>
-	<string name="adviceSelector">advice</string>
 	<string name="gettingAdvice">Обождите...</string>
 	<string name="noWidgetData">:( Насальника, виджета нету!</string>
 	<string name="error">А вот хуй!</string>
